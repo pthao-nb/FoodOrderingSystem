@@ -1,0 +1,44 @@
+<!-- Banner chào mừng -->
+<main class="home-main">
+  <section class="welcome-section">
+    <div class="welcome-content">
+      <h1>Chào mừng bạn đến với Ăn húp hội</h1>
+    </div>
+
+    <div class="video-container">
+        <video autoplay [muted]="true" loop playsinline class="hero-video">
+            <source src="/assets/video/food.mp4" type="video/mp4" />
+        </video>
+    </div>
+  </section>
+</main>
+
+<!-- Danh sách món ăn -->
+<section class="fooddishes">
+  <h2>Món ăn nổi bật</h2>
+
+  @if (isLoading) {
+    <p class="status-message">Đang tải món ăn...</p>
+  } @else if (errorMessage) {
+    <p class="status-message error-message">{{ errorMessage }}</p>
+  } @else if (foods.length === 0) {
+    <p class="status-message">Chưa có sản phẩm nổi bật.</p>
+  } @else {
+    <div class="food-grid">
+      @for (food of foods; track food.foodId) {
+        <article class="food-item">
+          <a class="food-link" href="#">
+            <img
+              [src]="getImageUrl(food.imageUrl)"
+              [alt]="food.foodName"
+              (error)="onImageError($event)"
+            />
+
+            <h3>{{ food.foodName }}</h3>
+            <p>{{ formatPrice(food.price) }}</p>
+          </a>
+        </article>
+      }
+    </div>
+  }
+</section>

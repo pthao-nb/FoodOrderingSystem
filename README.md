@@ -17,8 +17,8 @@ Dự án được chia thành hai phần chính: frontend và backend.
 FoodOrdering/
 ├── Frontend/
 │   ├── public/assets/images/
-│   │   ├── foods/
-│   │   └── banners/
+│   │   ├── img/
+│   │   └── video/
 │   └── src/
 │       ├── app/
 │       │   ├── core/
