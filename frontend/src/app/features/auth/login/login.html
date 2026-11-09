@@ -1,0 +1,82 @@
+
+<div class="login-container">
+  <div class="login-card">
+
+    <h2>Đăng nhập</h2>
+    <p class="subtitle">Chào mừng bạn quay trở lại!</p>
+
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+
+      <!-- Tài khoản -->
+      <div class="form-group">
+        <label for="taikhoan">Tài khoản</label>
+        <input
+          type="text"
+          id="taikhoan"
+          name="taikhoan"
+          [(ngModel)]="loginData.taikhoan"
+          placeholder="Nhập tài khoản"
+          required
+        >
+      </div>
+
+      <!-- Mật khẩu -->
+      <div class="form-group">
+        <label for="matkhau">Mật khẩu</label>
+
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="matkhau"
+            name="matkhau"
+            [(ngModel)]="loginData.matkhau"
+            placeholder="Nhập mật khẩu"
+            required
+          >
+
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'"
+          >
+            @if (showPassword) {
+              <span>👁</span>
+            } @else {
+              <span>👁</span>
+            }
+          </button>
+        </div>
+
+        <div class="forgot-password">
+          <a routerLink="/forgot-password">Quên mật khẩu?</a>
+        </div>
+      </div>
+
+      <!-- Thông báo -->
+      <p class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <p class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </p>
+
+      <!-- Nút đăng nhập -->
+      <button
+        type="submit"
+        class="login-submit"
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? 'Đang đăng nhập...' : 'Đăng nhập' }}
+      </button>
+
+    </form>
+
+    <p class="register-link">
+      Chưa có tài khoản?
+      <a routerLink="/register">Đăng ký ngay</a>
+    </p>
+
+  </div>
+</div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models
 {
@@ -13,6 +14,8 @@ namespace backend.Models
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Food> Foods { get; set; }
+
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,6 +74,55 @@ namespace backend.Models
                     .WithMany(c => c.Foods)
                     .HasForeignKey(f => f.MaLoai)
                     .IsRequired(false);
+            });
+
+            // Bảng tài khoản người dùng
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users");
+
+                entity.HasKey(u => u.UID);
+
+                entity.HasIndex(u => u.Taikhoan)
+                    .IsUnique();
+
+                entity.Property(u => u.UID)
+                    .HasColumnName("UID");
+
+                entity.Property(u => u.Hoten)
+                    .HasColumnName("Hoten")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.Property(u => u.Taikhoan)
+                    .HasColumnName("Taikhoan")
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                entity.Property(u => u.Matkhau)
+                    .HasColumnName("Matkhau")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.Property(u => u.Email)
+                    .HasColumnName("Email")
+                    .HasMaxLength(100);
+
+                entity.Property(u => u.DienthoaiKH)
+                    .HasColumnName("DienthoaiKH")
+                    .HasMaxLength(15);
+
+                entity.Property(u => u.DiachiKH)
+                    .HasColumnName("DiachiKH")
+                    .HasMaxLength(255);
+
+                entity.Property(u => u.Ngaysinh)
+                    .HasColumnName("Ngaysinh");
+
+                entity.Property(u => u.Role)
+                    .HasColumnName("Role")
+                    .HasMaxLength(20)
+                    .IsRequired();
             });
         }
     }

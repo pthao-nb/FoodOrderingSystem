@@ -1,3 +1,4 @@
+
 <header class="site-header">
   <div class="header-inner">
 
@@ -37,7 +38,11 @@
           aria-label="Tìm kiếm món ăn"
         />
 
-        <button class="search-btn" type="button" aria-label="Tìm kiếm">
+        <button
+          class="search-btn"
+          type="button"
+          aria-label="Tìm kiếm"
+        >
           🔍
         </button>
       </div>
@@ -45,14 +50,68 @@
 
     <!-- Các nút bên phải -->
     <div class="header-right">
-      <a routerLink="/cart" class="btn-ghost cart-btn" aria-label="Giỏ hàng">
+
+      <!-- Giỏ hàng -->
+      <a
+        routerLink="/cart"
+        class="btn-ghost cart-btn"
+        aria-label="Giỏ hàng"
+      >
         🛒
       </a>
 
-      <a routerLink="/login" class="btn btn-primary">
-        Đăng nhập
-      </a>
+      <!-- Nếu đã đăng nhập -->
+      @if (isLoggedIn) {
+        <div class="account-info">
 
+          <button
+            type="button"
+            class="account-btn"
+            (click)="toggleAccountMenu()"
+          >
+            <span class="username">{{ userName }}</span>
+
+            @if (userRole === 'admin') {
+              <span class="user-role">Admin</span>
+            }
+
+            <span>⌄</span>
+          </button>
+
+          @if (accountMenuOpen) {
+            <div class="dropdown-panel">
+              @if (userRole === 'admin') {
+                <a routerLink="/admin" class="dropdown-item">
+                  Quản trị
+                </a>
+              }
+
+              <a routerLink="/profile" class="dropdown-item">
+                Hồ sơ
+              </a>
+
+              <a routerLink="/orders" class="dropdown-item">
+                Đơn hàng
+              </a>
+
+              <button
+                type="button"
+                class="dropdown-item"
+                (click)="logout()"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <!-- Nếu chưa đăng nhập -->
+        <a routerLink="/login" class="btn btn-primary">
+          Đăng nhập
+        </a>
+      }
+
+      <!-- Nút menu mobile -->
       <button
         type="button"
         class="mobile-toggle"
@@ -79,7 +138,56 @@
         <a routerLink="/" (click)="closeMobileMenu()">Trang chủ</a>
         <a routerLink="/menu" (click)="closeMobileMenu()">Thực đơn</a>
         <a routerLink="/deals" (click)="closeMobileMenu()">Khuyến mãi</a>
-        <a routerLink="/login" (click)="closeMobileMenu()">Đăng nhập</a>
+
+        @if (isLoggedIn) {
+  <div class="account-info">
+
+    <button
+      type="button"
+      class="account-btn"
+      (click)="toggleAccountMenu()"
+      [attr.aria-expanded]="accountMenuOpen"
+    >
+      <img
+        src="/assets/img/default-avatar.jpg"
+        alt="Avatar"
+        class="account-avatar"
+      />
+
+      <span class="username">{{ userName }}</span>
+
+      @if (userRole === 'admin') {
+        <span class="user-role">Admin</span>
+      }
+    </button>
+
+    @if (accountMenuOpen) {
+      <div class="dropdown-panel">
+        @if (userRole === 'admin') {
+          <a routerLink="/admin" class="dropdown-item">
+            Admin
+          </a>
+        }
+
+        <a routerLink="/profile" class="dropdown-item">
+          Hồ sơ
+        </a>
+
+        <a routerLink="/orders" class="dropdown-item">
+          Đơn hàng
+        </a>
+
+        <button
+          type="button"
+          class="dropdown-item"
+          (click)="logout()"
+        >
+          Đăng xuất
+        </button>
+      </div>
+    }
+  </div>
+}
       </nav>
     </div>
   }
