@@ -1,0 +1,105 @@
+
+<div class="register-container">
+  <div class="register-card">
+
+    <h2>Đăng ký tài khoản</h2>
+    <p class="subtitle">Tạo tài khoản để đặt món ăn yêu thích</p>
+
+    <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+
+      <div class="form-group">
+        <label>Họ và tên *</label>
+        <input
+          type="text"
+          name="hoten"
+          [(ngModel)]="registerData.hoten"
+          placeholder="Nhập họ và tên"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>Tài khoản *</label>
+        <input
+          type="text"
+          name="taikhoan"
+          [(ngModel)]="registerData.taikhoan"
+          placeholder="Nhập tài khoản"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>Mật khẩu *</label>
+        <input
+          type="password"
+          name="matkhau"
+          [(ngModel)]="registerData.matkhau"
+          placeholder="Nhập mật khẩu (ít nhất 6 ký tự)"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>Xác nhận mật khẩu *</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          placeholder="Nhập lại mật khẩu"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="registerData.email"
+          placeholder="Nhập email">
+      </div>
+
+      <div class="form-group">
+        <label>Số điện thoại</label>
+        <input
+          type="tel"
+          name="dienthoaiKH"
+          [(ngModel)]="registerData.dienthoaiKH"
+          placeholder="Nhập số điện thoại">
+      </div>
+
+      <div class="form-group">
+        <label>Địa chỉ</label>
+        <input
+          type="text"
+          name="diachiKH"
+          [(ngModel)]="registerData.diachiKH"
+          placeholder="Nhập địa chỉ">
+      </div>
+
+      <div class="form-group">
+        <label>Ngày sinh</label>
+        <input
+          type="date"
+          name="ngaysinh"
+          [(ngModel)]="registerData.ngaysinh">
+      </div>
+
+      <p class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <p class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </p>
+
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Đang đăng ký...' : 'Đăng ký' }}
+      </button>
+
+    </form>
+
+    <p class="login-link">
+      Đã có tài khoản?
+      <a routerLink="/login">Đăng nhập</a>
+    </p>
+
+  </div>
+</div>

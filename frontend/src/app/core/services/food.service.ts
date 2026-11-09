@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -17,7 +18,7 @@ export interface Food {
   providedIn: 'root'
 })
 export class FoodService {
-  private readonly apiUrl = 'https://localhost:7008/api/Food';
+  private readonly apiUrl = 'http://localhost:7008/api/Food';
 
   constructor(private http: HttpClient) {}
 
