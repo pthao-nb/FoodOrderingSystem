@@ -1,0 +1,81 @@
+<main class="menu-page">
+  <header class="page-title">
+    <h1>Thực đơn</h1>
+    <p>Khám phá các món ăn đặc sắc của chúng tôi</p>
+  </header>
+  <section class="filter-container" aria-label="Lọc món ăn">
+    <label>Danh mục:
+      <select [(ngModel)]="categoryId" (ngModelChange)="apply()">
+        <option value="">Tất cả</option>
+        @for (category of categories(); track category.categoryId) {
+          <option [value]="category.categoryId">{{ category.categoryName }}</option>
+        }
+      </select>
+    </label>
+    <label>Giá:
+      <select [(ngModel)]="priceRange" (ngModelChange)="apply()">
+        <option value="all">Tất cả</option>
+        <option value="under-30000">Dưới 30.000đ</option>
+        <option value="30000-50000">Từ 30.000đ đến dưới 50.000đ</option>
+        <option value="50000-100000">Từ 50.000đ đến 100.000đ</option>
+        <option value="over-100000">Trên 100.000đ</option>
+      </select>
+    </label>
+    <form class="menu-search" (ngSubmit)="apply()">
+      <label class="sr-only" for="menu-keyword">Tìm món ăn</label>
+      <div><input id="menu-keyword" name="keyword" type="search" maxlength="150" [(ngModel)]="keyword" placeholder="Tìm kiếm món ăn..." />
+      <button type="submit">Tìm</button>
+      <button type="button" class="reset-filters" (click)="reset()">Xóa bộ lọc</button></div>
+    </form>
+  </section>
+  @if (categoryError()) { <p role="status">Không tải được danh mục. Bạn vẫn có thể tìm kiếm món ăn.</p> }
+  <div class="results-info">
+    <p class="sr-only" aria-live="polite">{{ result()?.totalCount || 0 }} món ăn{{ isSearch && keyword ? ' cho “' + keyword + '”' : '' }}</p>
+    <label>Sắp xếp:
+      <select [(ngModel)]="sort" (ngModelChange)="apply()">
+        <option value="default">Mặc định</option><option value="name-asc">Tên A–Z</option>
+        <option value="name-desc">Tên Z–A</option><option value="price-asc">Giá thấp đến cao</option>
+        <option value="price-desc">Giá cao đến thấp</option>
+      </select>
+    </label>
+  </div>
+  <p class="cart-message" role="status">{{ cartMessage() }}</p>
+  @if (loading()) {
+    <div class="status" role="status">Đang tải món ăn...</div>
+  } @else if (error()) {
+    <div class="status" role="alert"><p>{{ error() }}</p><button type="button" (click)="retry()">Thử lại</button></div>
+  } @else if (isSearch && !keyword) {
+    <div class="status">Nhập từ khóa để tìm món ăn bạn yêu thích.</div>
+  } @else if (!result()?.items?.length) {
+    <div class="status"><p>Không tìm thấy món ăn phù hợp.</p><button type="button" (click)="reset()">Xóa bộ lọc</button></div>
+  } @else {
+    <section class="food-grid" aria-label="Danh sách món ăn">
+      @for (food of result()!.items; track food.foodId) {
+        <article class="food-item">
+          <img [src]="imageUrl(food.imageUrl)" [alt]="food.foodName" loading="lazy" (error)="imageError($event)" />
+          <div class="food-info">
+            <h2>{{ food.foodName }}</h2>
+            <div class="food-footer">
+              <strong>{{ food.price | number:'1.0-0':'vi' }} đ</strong>
+              <button type="button" [disabled]="adding().has(food.foodId)" (click)="addToCart(food)">
+                {{ adding().has(food.foodId) ? 'Đang thêm...' : 'Thêm' }}
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </section>
+    @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Phân trang thực đơn">
+        <button [disabled]="result()!.page === 1" (click)="apply(result()!.page - 1)">Trước</button>
+        @if (pages[0] > 1) { <button (click)="apply(1)">1</button><span>…</span> }
+        @for (page of pages; track page) {
+          <button [class.active]="page === result()!.page" [attr.aria-current]="page === result()!.page ? 'page' : null" (click)="apply(page)">{{ page }}</button>
+        }
+        @if (pages[pages.length - 1] < totalPages) { <span>…</span><button (click)="apply(totalPages)">{{ totalPages }}</button> }
+        <button [disabled]="result()!.page === totalPages" (click)="apply(result()!.page + 1)">Sau</button>
+      </nav>
+    }
+  }
+</main>
+

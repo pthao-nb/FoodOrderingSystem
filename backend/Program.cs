@@ -18,6 +18,8 @@ builder.Services.AddDbContext<FoodOrderingDbContext>(options =>
 
 // 3. Đăng ký Services
 builder.Services.AddScoped<IFoodService, FoodService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // 4. Cấu hình JWT Authentication

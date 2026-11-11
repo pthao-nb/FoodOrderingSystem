@@ -30,22 +30,7 @@
         </ul>
       </nav>
 
-      <div class="search-wrap">
-        <input
-          type="search"
-          class="search-input"
-          placeholder="Tìm món..."
-          aria-label="Tìm kiếm món ăn"
-        />
-
-        <button
-          class="search-btn"
-          type="button"
-          aria-label="Tìm kiếm"
-        >
-          🔍
-        </button>
-      </div>
+      <app-food-search idPrefix="desktop-header" (searched)="closeMobileMenu()" />
     </div>
 
     <!-- Các nút bên phải -->
@@ -134,6 +119,7 @@
         ✕
       </button>
 
+      <app-food-search idPrefix="mobile-header" (searched)="closeMobileMenu()" />
       <nav class="mobile-nav">
         <a routerLink="/" (click)="closeMobileMenu()">Trang chủ</a>
         <a routerLink="/menu" (click)="closeMobileMenu()">Thực đơn</a>

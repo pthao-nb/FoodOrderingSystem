@@ -1,0 +1,36 @@
+<main class="search-page">
+  <h1>Kết quả tìm kiếm cho: {{ keyword }}</h1>
+  <p class="cart-message" role="status">{{ cartMessage() }}</p>
+  @if (loading()) {
+    <p class="status" role="status">Đang tìm món ăn...</p>
+  } @else if (error()) {
+    <div class="status" role="alert"><p>{{ error() }}</p><button (click)="retry()">Thử lại</button></div>
+  } @else if (!keyword) {
+    <p class="status">Nhập từ khóa trên thanh tìm kiếm để tìm món ăn.</p>
+  } @else if (!result()?.items?.length) {
+    <p class="status">Không tìm thấy sản phẩm nào phù hợp!</p>
+  } @else {
+    <section class="search-results" aria-label="Kết quả tìm kiếm">
+      @for (food of result()!.items; track food.foodId) {
+        <article class="product-card">
+          <img [src]="imageUrl(food.imageUrl)" [alt]="food.foodName" loading="lazy" (error)="imageError($event)" />
+          <div class="product-info">
+            <h2>{{ food.foodName }}</h2>
+            <p>{{ food.description }}</p>
+            <strong>{{ food.price | number:'1.0-0':'vi' }}₫</strong>
+          </div>
+          <button class="add-to-cart" [disabled]="adding().has(food.foodId)" (click)="addToCart(food)">
+            {{ adding().has(food.foodId) ? 'Đang thêm...' : 'Thêm vào giỏ' }}
+          </button>
+        </article>
+      }
+    </section>
+    @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Phân trang kết quả">
+        <button [disabled]="result()!.page === 1" (click)="apply(result()!.page - 1)">Trước</button>
+        <span>Trang {{ result()!.page }} / {{ totalPages }}</span>
+        <button [disabled]="result()!.page === totalPages" (click)="apply(result()!.page + 1)">Sau</button>
+      </nav>
+    }
+  }
+</main>

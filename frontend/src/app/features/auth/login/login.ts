@@ -48,11 +48,10 @@ export class Login {
     this.isLoading = true;
 
     this.authService.login(this.loginData).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
         this.successMessage = 'Đăng nhập thành công!';
 
-        console.log('Thông tin người dùng:', response);
 
         // Chuyển về trang chủ sau khi đăng nhập thành công
         this.router.navigate(['/']);
