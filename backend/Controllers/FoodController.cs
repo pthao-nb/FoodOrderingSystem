@@ -1,4 +1,5 @@
-﻿
+using System.ComponentModel.DataAnnotations;
+
 using backend.DTOs.Food;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,15 @@ namespace backend.Controllers
         {
             _foodService = foodService;
         }
+
+        [HttpGet("suggestions")]
+        public async Task<ActionResult<List<FoodDto>>> GetSuggestions(
+            [FromQuery, StringLength(150)] string keyword = "")
+            => Ok(await _foodService.GetSuggestionsAsync(keyword));
+
+        [HttpGet("menu")]
+        public async Task<ActionResult<MenuResult>> GetMenu([FromQuery] MenuQuery query)
+            => Ok(await _foodService.GetMenuAsync(query));
 
         // GET: api/Food
         [HttpGet]

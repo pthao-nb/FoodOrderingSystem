@@ -1,4 +1,5 @@
 
+import { FoodSearch } from '../components/food-search/food-search';
 import { Component } from '@angular/core';
 import {
   Router,
@@ -11,7 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, FoodSearch],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
@@ -39,9 +40,8 @@ export class Header {
 
   // Lấy thông tin người dùng đã đăng nhập
   updateAuthState(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
-
     const user = this.authService.getCurrentUser();
+    this.isLoggedIn = this.authService.isLoggedIn();
 
     this.userName = user?.hoten || '';
     this.userRole = user?.role || '';

@@ -49,7 +49,11 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:7008/api/Auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Discard persistent credentials from the previous login implementation.
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
 
   // Đăng ký tài khoản
   register(data: RegisterData): Observable<any> {
@@ -63,8 +67,8 @@ export class AuthService {
       data
     ).pipe(
       tap(response => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify({
+        sessionStorage.setItem('token', response.token);
+        sessionStorage.setItem('user', JSON.stringify({
           uid: response.uid,
           hoten: response.hoten,
           taikhoan: response.taikhoan,
@@ -90,24 +94,47 @@ export class AuthService {
     );
   }
 
-  // Lấy JWT Token
+  // The session belongs to this browser tab; reloads keep it until JWT expiry.
   getToken(): string | null {
-    return localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
+    if (!token) return null;
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) throw new Error('Invalid token');
+      const encoded = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=')));
+      if (typeof payload.exp !== 'number' || !Number.isFinite(payload.exp) || payload.exp * 1000 <= Date.now()) {
+        throw new Error('Expired token');
+      }
+      return token;
+    } catch {
+      this.logout();
+      return null;
+    }
   }
 
-  // Lấy thông tin người dùng đang đăng nhập
-  getCurrentUser(): any {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+  getCurrentUser(): Omit<AuthResponse, 'token'> | null {
+    if (!this.getToken()) return null;
+    try {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user || !Number.isInteger(user.uid) || typeof user.hoten !== 'string' ||
+          typeof user.taikhoan !== 'string' || typeof user.role !== 'string') {
+        throw new Error('Invalid user');
+      }
+      return user;
+    } catch {
+      this.logout();
+      return null;
+    }
   }
 
-  // Kiểm tra trạng thái đăng nhập
   isLoggedIn(): boolean {
     return this.getToken() !== null;
   }
 
-  // Đăng xuất
   logout(): void {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   }
